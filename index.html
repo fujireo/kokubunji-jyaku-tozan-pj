@@ -341,11 +341,13 @@ function burst(li,bt,all){
     if(k%3===0)i.className='sq';
     i.style.cssText=`--x:${cx}px;--y:${cy}px;--dx:${Math.cos(a)*d}px;--dy:${Math.sin(a)*d-10}px;--r:${Math.random()*360}deg;--c:${cols[k%4]};animation-delay:${Math.random()*60}ms`;box.appendChild(i)}
   li.appendChild(box);setTimeout(()=>box.remove(),1000)}
+let lastView=null;
 function route(){
+  const same=lastView===location.hash,y0=scrollY;lastView=location.hash;
   const id=(location.hash||'').replace(/^#r-/,'');
   const app=document.getElementById('app'),home=document.getElementById('home'),det=document.getElementById('detail'),bar=document.getElementById('bar');
-  if(location.hash.startsWith('#r-')&&C[id]){cur=id;big=false;home.hidden=true;det.hidden=false;bar.hidden=false;app.classList.add('isdetail');drawDetail();scrollTo(0,0)}
-  else{home.hidden=false;det.hidden=true;bar.hidden=true;app.classList.remove('isdetail');drawHome();if(homeY){scrollTo(0,homeY)}}
+  if(location.hash.startsWith('#r-')&&C[id]){cur=id;if(!same)big=false;home.hidden=true;det.hidden=false;bar.hidden=false;app.classList.add('isdetail');drawDetail();scrollTo(0,same?y0:0)}
+  else{home.hidden=false;det.hidden=true;bar.hidden=true;app.classList.remove('isdetail');drawHome();if(same)scrollTo(0,y0);else if(homeY){scrollTo(0,homeY)}}
 }
 let homeY=0;
 function go(id){homeY=scrollY;location.hash='r-'+id}
