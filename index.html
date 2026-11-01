@@ -231,12 +231,13 @@ function drawList(){
   const L=document.getElementById('list');L.innerHTML=h;L.querySelectorAll('.item').forEach(b=>b.addEventListener('click',()=>go(b.dataset.id)));
 }
 function drawHome(){drawSeg();drawOv();drawList();initGuide();const tg=document.getElementById('ovtg');tg.textContent=ovBig?'ふつうに戻す':'地図を大きくする';tg.setAttribute('aria-pressed',ovBig);tg.onclick=()=>{ovBig=!ovBig;drawHome();if(ovBig){const w=document.getElementById('ovwrap');w.scrollLeft=w.scrollWidth*.28}}}
+let guideOpen=null;
 function initGuide(){
   const g=document.getElementById('guide'),hb=document.getElementById('howto');let seen=false;
-  try{seen=localStorage.getItem('kbj-guide')==='1'}catch(e){}
-  g.hidden=seen;hb.hidden=!seen;
-  document.getElementById('gok').onclick=()=>{try{localStorage.setItem('kbj-guide','1')}catch(e){};g.hidden=true;hb.hidden=false;scrollTo(0,0)};
-  hb.onclick=()=>{g.hidden=false;hb.hidden=true;scrollTo({top:0,behavior:'smooth'})};
+  if(guideOpen===null){try{seen=localStorage.getItem('kbj-guide')==='1'}catch(e){}guideOpen=!seen}
+  g.hidden=!guideOpen;hb.hidden=guideOpen;
+  document.getElementById('gok').onclick=()=>{try{localStorage.setItem('kbj-guide','1')}catch(e){};guideOpen=false;g.hidden=true;hb.hidden=false;scrollTo(0,0)};
+  hb.onclick=()=>{guideOpen=true;g.hidden=false;hb.hidden=true;scrollTo({top:0,behavior:'smooth'})};
 }
 /* ---------- detail ---------- */
 function detailMap(c,wpx){
@@ -349,7 +350,7 @@ function route(){
 let homeY=0;
 function go(id){homeY=scrollY;location.hash='r-'+id}
 addEventListener('hashchange',route);
-addEventListener('resize',()=>{clearTimeout(window._rz);window._rz=setTimeout(route,150)});
+let lastW=innerWidth;addEventListener('resize',()=>{if(innerWidth===lastW)return;lastW=innerWidth;clearTimeout(window._rz);window._rz=setTimeout(route,150)});
 matchMedia('(prefers-color-scheme: dark)').addEventListener('change',route);
 new MutationObserver(route).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});
 route();
