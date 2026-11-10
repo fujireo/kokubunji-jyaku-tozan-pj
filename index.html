@@ -343,6 +343,7 @@ function drawDetail(){
     const db=d.querySelector('#donebox');db.innerHTML=all?'<p class="done">ぜんぶ踏破しました。おつかれさま！</p>':'';
     if(on){b.classList.remove('pop');li.classList.remove('flash');void b.offsetWidth;li.classList.add('flash');b.classList.add('pop');
       requestAnimationFrame(()=>burst(li,b,all&&!was))}}));
+  document.getElementById('barin').innerHTML=`<a class="btn main" target="_blank" rel="noopener" href="${gmap(c,false)}">Googleマップで歩く</a><a class="btn sub" target="_blank" rel="noopener" href="${gmap(c,true)}">いまの場所から歩き出す</a>`;
 }
 function burst(li,bt,all){
   try{if(navigator.vibrate)navigator.vibrate(all?[30,40,30,40,60]:25)}catch(e){}
